@@ -1,0 +1,7547 @@
+{
+ "schema": "fetchgate-marketnow-join/1.0",
+ "generated_at_utc": "2026-10-03",
+ "join_key": "sha256(raw remotes[].url, no normalization)[0:16] == marketnow auth-gate-skills endpoint_hash",
+ "provenance": {
+  "fetchgate": {
+   "file": "https://fetchgate.dev/data/mcp-registry-audit-2026-08-28.servers.jsonl",
+   "edition": "2026-08-28",
+   "license": "CC BY 4.0",
+   "rows": 15329,
+   "aggregates_recomputed_exactly": true
+  },
+  "marketnow": {
+   "file": "https://www.marketnow.site/api/auth-gate-skills.json",
+   "edition": "2026-09-18",
+   "rows_published": 6165
+  }
+ },
+ "intersection": {
+  "endpoints": 5097,
+  "share_of_marketnow_published_rows_pct": 82.7,
+  "marketnow_rows_unmatched": 1068,
+  "marketnow_unmatched_reason": "registry entries added after the 2026-08-28 edition",
+  "farm_urls_in_marketnow_slice": 0
+ },
+ "confusion_matrix": {
+  "rows_marketnow_2026_09_18": {
+   "OPEN": {
+    "ok": 1270,
+    "error": 43,
+    "auth-required": 18,
+    "timeout": 3,
+    "not-mcp": 2
+   },
+   "LATE_GATE": {
+    "error": 19,
+    "auth-required": 1
+   },
+   "HARD_GATE": {
+    "ok": 78,
+    "error": 33,
+    "auth-required": 1326,
+    "not-mcp": 6,
+    "timeout": 2,
+    "sse-transport-skipped": 1
+   },
+   "RESPONDS_NOT_SERVING": {
+    "error": 27,
+    "ok": 519,
+    "timeout": 2,
+    "auth-required": 9,
+    "not-mcp": 2
+   },
+   "INVALID": {
+    "ok": 168,
+    "not-mcp": 257,
+    "auth-required": 5,
+    "error": 7,
+    "timeout": 1
+   },
+   "PROTOCOL_MISMATCH": {
+    "error": 363,
+    "not-mcp": 30,
+    "ok": 41,
+    "sse-transport-skipped": 19,
+    "auth-required": 8,
+    "timeout": 6
+   },
+   "SERVER_ERROR": {
+    "error": 39,
+    "ok": 11,
+    "not-mcp": 13,
+    "auth-required": 6
+   },
+   "CLIENT_ERROR": {
+    "error": 138,
+    "ok": 18,
+    "not-mcp": 6
+   },
+   "UNREACHABLE": {
+    "timeout": 41,
+    "error": 464,
+    "auth-required": 27,
+    "ok": 62,
+    "not-mcp": 6
+   }
+  },
+  "columns_fetchgate_2026_08_28": [
+   "ok",
+   "auth-required",
+   "error",
+   "not-mcp",
+   "sse-transport-skipped",
+   "timeout"
+  ]
+ },
+ "rates_on_intersection": {
+  "marketnow_open_pct": 26.2,
+  "fetchgate_ok_pct": 42.5,
+  "marketnow_gated_hard_plus_late_pct": 28.8,
+  "fetchgate_auth_required_pct": 27.5
+ },
+ "predicate_alignment_counterfactuals": {
+  "contested_two_cells": {
+   "RESPONDS_NOT_SERVING_to_ok": 519,
+   "INVALID_to_ok": 168,
+   "total": 687
+  },
+  "if_contested_counted_open": {
+   "marketnow_open_pct": 39.7,
+   "fetchgate_ok_pct": 42.5
+  },
+  "if_contested_counted_closed": {
+   "marketnow_open_pct": 26.2,
+   "fetchgate_ok_pct": 29.0
+  }
+ },
+ "drift_between_editions": {
+  "their_ok_to_our_not_open": 897,
+  "our_open_to_their_not_ok": 66
+ },
+ "live_probe_samples_2026_10_03": [
+  {
+   "cell": "RESPONDS_NOT_SERVING -> ok",
+   "endpoint_hash": "2a44f5ffbff027ba",
+   "probed_utc": "2026-10-03T23:50Z",
+   "initialize_http": 200,
+   "tools_list_http": 200,
+   "tools_count_now": 10,
+   "fetchgate_tool_count_0828": 8,
+   "reading": "serves tools today; our 09-18 classification was the outlier (transient or tools/list slower than our 12s single-shot)"
+  },
+  {
+   "cell": "INVALID -> ok",
+   "endpoint_hash": "728118229a2c304f",
+   "probed_utc": "2026-10-03T23:50Z",
+   "initialize_http": 200,
+   "tools_list_http": 200,
+   "tools_count_now": 9,
+   "fetchgate_tool_count_0828": 9,
+   "reading": "clean JSON-RPC today; our 09-18 read caught a non-JSON-RPC HTTP 200 (WAF/challenge page) - vantage-sensitive"
+  },
+  {
+   "cell": "HARD_GATE -> ok",
+   "endpoint_hash": "009e0bf3c8a619f8",
+   "probed_utc": "2026-10-03T23:50Z",
+   "initialize_http": 401,
+   "tools_list_http": null,
+   "tools_count_now": null,
+   "fetchgate_tool_count_0828": 49,
+   "reading": "returns 401 today, matching our 09-18 HARD_GATE read; genuine drift toward gating between editions"
+  },
+  {
+   "cell": "OPEN -> error",
+   "endpoint_hash": "d321fce0eb562987",
+   "probed_utc": "2026-10-03T23:50Z",
+   "initialize_http": 200,
+   "tools_list_http": 200,
+   "tools_count_now": 5,
+   "fetchgate_tool_count_0828": null,
+   "reading": "serves 5 tools today and was OPEN on our 09-18 scan; 503 on the 08-28 date - genuine drift toward recovery"
+  }
+ ],
+ "off_remap_rows_hash_only": [
+  {
+   "endpoint_hash": "d23e463585bf1c81",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "ef0af0f565a60639",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "177d807e10bc23a3",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "e0e155565bcfae98",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "c79fe04fc801c5b8",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "d1c2b739c901d40c",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "17ec743ea7603941",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "642a4fc26ff4f6dc",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f9c57e3b664eb5cd",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2dc6cd782f02be28",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2678df6590317d0a",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1c7117a66d2ac413",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8bf1702032f03254",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f7d9cb005ad00032",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7e866e693a9fafce",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8284787fd3203bcd",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "64fa2b26ea26a8f4",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3503568b9afe6c9c",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5d7ed39d7e672c66",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a6f25f5d6024e8a8",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a1ab255fe442f474",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b64c1ad4ae21d933",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d69a7f57cf8228ff",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d891f4c8cc16a9f5",
+   "marketnow_state": "CLIENT_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6a2aceeebea61873",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7cf766ec68e1b0eb",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "de6fd3e40e57aa05",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "deae1ff931d41c9f",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0c3df4b0a7e6fb51",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c6951de6012812f4",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "494d1fd559dc439b",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2933224b5353d95e",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "163b4a685993e787",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "59a987ce484e3d0c",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "983945556a761bc5",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3172c97458f3fce3",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "da73814f6bf6f3af",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "828581d0943c5f09",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "982ec3394f55e7c5",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ce8c79283b892b07",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a3b64251a5fe019f",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ee3499307a693edd",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "52ad9521397c0d77",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f8a939d58c5648a4",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "07ea973ea6d2f493",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "aeba23b8183b9fd6",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "28290a39c3af6f73",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "56c94481e4cc33f0",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3428c4ad3edfcb3b",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6b27968cb210bced",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0226ea2e189e430f",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "87df17ab0d49d14a",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "242e10ce7e42d2a8",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "13d3650eebc18861",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f217549ceb05cf8d",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "02836fd016afe431",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8918cb1ae112e343",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1a63454e5f21b4df",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "b139ff684219413a",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "ec400e05d61283a7",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "5060244ad120966e",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "db340555cb48bff5",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "07650bb2d5886dc7",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "f6b422da318d44eb",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5815290933386fef",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9dfe7e161e9582a1",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "009e0bf3c8a619f8",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fd68903dfc1c8532",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fca0aef8d4dc8818",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8fc81f3c37b812dd",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3bd2462b78f91ec7",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f92c8ee8334156a5",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ff90d39c54dbbcbd",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "877102c4ce7ef0d7",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "74f752c81d31f1cf",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cb88c07e74c2745e",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "721c8714d50828db",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fbdf5cb4391e700c",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "34d5384894f3f3dc",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2355420ffbc62f65",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "34bf59bb63f4f10b",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "24319fc65c8c6dfe",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a6c58c7747d1b7d1",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "144050e592236d02",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "20ecc41116f42651",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ac9cc5149e4ad582",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ad2c0be05a982242",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c29281afebbc9cc3",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f20462ef2a2a050c",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8c1d6fae3c80ff93",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "999f0e7acb8cfd53",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "75a0293fc943441b",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6cc0fa07514b48a2",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4f304befd7baeeaf",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "774474760a0ac274",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "75b6cf2c05733aa7",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d333c7f77f06e478",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7ddc4df9e21aca14",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2b621a16ca797219",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4547ae7840e1084c",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9d5d3604294a1b25",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e86310bb10edb9df",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a0381f86287b218c",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0249385820588976",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "18a7b89c6588f8dd",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "395f7c1a95a4ff4e",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "93a03ae90623e582",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "73f1f37e46249a2d",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f40a89406e42d3f7",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3008778ff8ef872b",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e66d7a6070dec26b",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ffc5d059e07d6902",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "741b165ced1d04c9",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "152795d7e7de5e20",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6476725a3d3d1cd2",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "34a250b37a0bb07a",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0e5c2a9fb2874046",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "584395d291ab0db3",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b90b9c5e19fd9446",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0d211fe50cc81608",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "82fd8ba8f39f8feb",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "039b8d7113fbb34b",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "64d1173048f484d2",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "475fbdd23248e3a6",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e07c60f82339cdfa",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "746d6cf53b78bcfc",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d734743f0866f767",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dcc74671cbd1f075",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b0793ff54b87a4ff",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "de30941bb61d4d08",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "594b7a6e754edb98",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e249a6955331dcb8",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "47b5b43c962eaee1",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dfbbd1a8e5bbd24e",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "70fc2d4481edd66a",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1164990f12f49bb2",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c4afa2759ead0d2d",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "91ddd1727332a13d",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "65b26bbc0d7205cb",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c809a0351aa81ebe",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "03dbcd3fc4d73bf1",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ed8a48fd2806515c",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "sse-transport-skipped"
+  },
+  {
+   "endpoint_hash": "78f8a6bbda214a04",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "1dd604161328d7b5",
+   "marketnow_state": "HARD_GATE",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "74feff08170d224c",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "3d66d94c549e579c",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "3f15547a9005bff6",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "252c2c93218c1c6a",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "ebeaa54cd51dda9d",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "ebed35f5d29590db",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "715ea2b407f56e5e",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "309afb75d5d62154",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3306265a4ab75408",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "374e967459181f1e",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "00256804085f3bd8",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "30c6f24f42238b63",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ccaad168f6aa1403",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "030f8d70b1773469",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b324b5381b835832",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1c88f236644eaa77",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ff64569c0aa1dd32",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ccd883f63f9e01d1",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cea78a8272189af6",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "08582b64b9b027da",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2b7a7e5ce6dfb765",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "333a2acfcb242b3d",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ed67b7935813ab1e",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7a1d2721e23c2f03",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5b0b5de7e8d23d7a",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1b535eb03600ae63",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "88551fc958b6262d",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0c9145ace4595b04",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "74671b03d18ed137",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "657abd8af9eddf03",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "851f3faa4b346556",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ade3a3ef865f8c29",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "010098742705b65e",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2adbde10032b4f36",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9389a1e8b59171c9",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "19d99af41fccd863",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "74feed8fe9db8d65",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2451df7df4fde457",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fb19d2eb19fb75db",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ddadda8b6a6d0c53",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a9847fcc599f1f9f",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "99f0d348a66e4f0c",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ef7b4f514d4d40e7",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "083c544291fa4919",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ae965e32078494c7",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b3910e4565b13fcf",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2861e62192c05abf",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f6ce89716888df42",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cbfe3a9fc79957ec",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "269bac3beb2ec36c",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "930b19963dcdd248",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5a62cc9b5a74c6d4",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d7bc237bfe172763",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0e6ec9a598f47d56",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "40053391dc461605",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b5b257a8c60902f0",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "86fe8aeb4fc27b64",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ada481c51cf33939",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8f805553877a5787",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dd1f7fad1d13dfc6",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "317e128f92b5e87a",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0bd7bc85f8941b35",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b899efdac1531a63",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4cd0739a5985d4d4",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bb19ce746ecbed86",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8a23d6b9472281e2",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c44626d854cc9ce6",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ebcde15441e1e216",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a60fae2ffc8d4520",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2528a501d4edf838",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "818f5daa4b2047f3",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9817e1e269a9a257",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a9e0fff598374b4a",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e0037a74870c41e6",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7d67f3d64d68162c",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d8e438129b0ffe18",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5b90aa0fdabaa36f",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4fcccddf340616e3",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "140fd9100cad3a60",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "66f457f3d875a188",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cfd2b80097048961",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "907b37f257d262af",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "25d7236d4eff6ef6",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "16d1620a50560124",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "61c3c80d1f26f080",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "03f3f3971fd2b22c",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2f922923953fa4fe",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "728118229a2c304f",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9dc511da618e354e",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0217022ccc5ce675",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "da5057975966fd2d",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6f3275b20c069545",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cb7a836c35c2e6a5",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "293834f349667b52",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "638ec29c91e92062",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bb31d089c25c42a4",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ab0093f913843289",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "37aa3965e6b45527",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2c95dafa587e45d4",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5f964cc4f1877dda",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "198a37a9d5341a2c",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "213e07bf51165bba",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c96a2b5fc0d85fa9",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e7657563f66923d3",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d10ade00af3e4ffa",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ab1984bb20358f71",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "02386b4b3175dd6a",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "30e8f6d6776948b2",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b8ec7c6ac4390fa0",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c4f078efd6cdd3e8",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6bc6c4fbb7e8e5b8",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d43da9d1a7f22d0b",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "944a5c12c223e73d",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1245fa4167bdb5d5",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b6e84eafe53c33f2",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bfd1e3550aabd44d",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4d08d31c617b6905",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "65596bd520bdeb89",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5398aac864e0b661",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f7b7e327f6b2e750",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9884ba6106894cb3",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3f4244b684373167",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0cfe82e6da1d99bb",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0f941d2cdd8ec1fe",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2d1065867f65dfaa",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ae8bb29471596598",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d6f5d25e0c38052f",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "99c800fd73f70575",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f0f4fb9e239e2350",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "86f65b26881f8d46",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ac4e2bf63cc7a931",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cf9482e34f998cf8",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "beaa0da718a7a98d",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f899245bada4d1dc",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "53ca4ec64f87bdaf",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8c5daf7038ebc689",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1984447002acfc00",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1fc820b4e0199e37",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1588da219a054379",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5ca848d3f0b79cf4",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "aac092563b1bbdda",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f9d7c65617f97571",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c89554f1916d3fc9",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7141f773c35d274b",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7c93fad839b4cd07",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ce9e5d68c6e3fba1",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3c02aef2d86c34a1",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9818689391ab7291",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c9b86be8d5d4dd08",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "371c947d14316af7",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d58570e33f5a114b",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b808660f2b2993e8",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0b9a9074d485e979",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cfdabea8eb3d93e0",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1aa7817cc0673f15",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9be007402560e105",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "57fc709db9232d2e",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f38ae232631120cc",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e2e784b802499f49",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b896597829bbab89",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bad65d4b6efdba7a",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d011ada2191f0835",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "da7add753b37a50a",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0f65be4001c34661",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "493ce9595756a380",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "637d049624f415c4",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "10924830a32d1abb",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "14db659c5116525b",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a304d0a3026e55ea",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fdd48b4fee53eea7",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a6a12986ae8c90d1",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4abb2fb1ff9b71ae",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4359de9018e6730e",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c68c4a8e8a8de1b8",
+   "marketnow_state": "INVALID",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "51e1f1028f076187",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1585f7e9c1717e87",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7d358ca4e61c7212",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "36b853e49164ae2f",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "81ef232463417561",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d0cf9ef1c24718bb",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "50d4f49e906ea117",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "30b88df167e8d562",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "640c32bae116fe0f",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "083140239cd766c1",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "adf5de214b27823f",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "82f48fffc1524d16",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "32ca31b590ff688f",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5838fed35f19dc10",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "de65ed1d3c26e28f",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3f782d0c68301ff0",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2ee1e39a9cd954ad",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "570e0fcd1fc39181",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "69153d927bf76d29",
+   "marketnow_state": "LATE_GATE",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7433467c0e7af407",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "743d8c22962996a4",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "c2d5e69d5688d982",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "522a5389af54444c",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "6c5d25e02308396e",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "919935bf0826c8c1",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "098f3f47c1125e36",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "8d3ab0b9f62ba934",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "2fa997d5ac0282ba",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "923971ef799abaff",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "200e738265fce3cb",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "e204bc34c948485c",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "8915baa05cd7a87f",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "3882181ecd94186d",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "d6de1e8bfa7ec8cc",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "1be8bf06097bc94f",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "8f2cd5cb8dc872ed",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "99d52f97d04e6641",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "0cc8b8a4b72aa638",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bced27dc87384caa",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "979e26ac4c7d6ff4",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "dbd6ce4ce446b14d",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c71bde9caf5c0347",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7167479cfb0f6eeb",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "307e76343dc08b66",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "df270eae58395072",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e12013da930714cf",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "894a6e9bb85fa30e",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "fdfcb54df75905fc",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2b6b9e8b4500ef13",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "aae1f03054ca28f5",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "badaf1c1626c7e55",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b1c20ce57bc3b99d",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "45f719562c1e1a00",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "305cbfc0510a778e",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "be707bf5d46dae1b",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a6608c5c609e762e",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ba010af06f71dd43",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "55bf06c40e1acd0b",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "28b8d99a43745ac8",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a6bfa30cab5f898a",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0600039870f9ec9b",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5d84a0f92b147c99",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "36d04d1a935fcc74",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5619d6880eafeec1",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8e778a8c917dc117",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9d7fd63d73fba3c6",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7b52bc128caafcb0",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0b1119859ca2ff8e",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "def3dd165f007d7f",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a2dd85cd0a832fab",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "163adf65f8892219",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "475d27297ae91453",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "937e3dae4ef9871e",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a1974c413abcbffd",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e69ca83b66ae1600",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8dc9b7579270f304",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d321fce0eb562987",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "41069fbf0e821837",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "58518ddfdb1ba698",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "95c9a79512db2ebd",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2f006bfa8db670dd",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "822addcc3ba90008",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "f926c7331c9da809",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "ac74245b3aebbd30",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "b317e6d0b6d6771b",
+   "marketnow_state": "OPEN",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "e8c5649d873bcf1f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "128696328099998f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "aff80eeb6ec33fad",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "6fbcb4306f1dc72b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "1bc914e29a671f27",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "71098d3066f145d3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "d8f5d4318b7c6365",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "b9882f2528884157",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "876a816c924c4d05",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b9688f9d725d3051",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4e44b3cdc3d0375e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7dca73d24bf75bfc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c6126eefea2e6961",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b57eefc797de7078",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "34715604bccd7dcd",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "61563acfca893a05",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4e3af7bc7544424a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b9a53b6c30ad9dce",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "37ad4a2a16bc44dc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4ff2015a3c6bc097",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "91ebfe8f8d7e1846",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a53d186d0433fb1c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "66c7f0cf978d2086",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "afcd2e15f79126ce",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8682baa9a0d5493d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c2cf4145fb80fa16",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f0bc295a8caaf4fb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "42e4f4ce418f4f96",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "310a5d2ed1a9a373",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ee49562b3486bcc4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "26a7c281c53208d1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "19f12aa87467aeea",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "cf0f3472c87677f8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "caaa5cbdcbd4601c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d00a7eaeaa288eb5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "96f1549c3e9a8d87",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3f1593e0bbbb55e6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "098cafaf087a7faa",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e6ad989288577bad",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "22a2c73d6d568f90",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9d04f1bd79a93b99",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "83a89e8f0b62ef06",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c16596ea89c7dd00",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9eea1d4c187d203b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b468140ccdcb529e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4bac32eec4d871e6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a52e5297762be57d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e663b445b3511e2e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d4e5d934b6ef9567",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ca6215bd0603fcf4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c1b1a7dfdd7191c4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "66ea695d3b5fc2fc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7d287b6e872f20db",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "cca86d7a64d5e903",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "da9501e536fe5efe",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "646eb6c16f11fdb9",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "77d123df9ed52c62",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e781a0aebfd98ce8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3c344eb5652e347e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "941a641da50a13fb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "df7d8f560a2cec3e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4042973624773f0a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "90689c46d08e13d0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "369a568067018370",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "78155013f5fa62f5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "04aaecb1a7639f83",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6896178a732704cc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2d65a897d8abfc6f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4c39cc8fbbca22e2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0df131e43f2e623d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "312f91c18b55c90d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "93c6fd7e1ff8bea0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2800d3e2e06f2d1e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b06bdbc72c46b7f6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "59e95a2a9ddddafb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "fb5d49c9311fafdd",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "57ed5ca5024210dd",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8dd83010e3a875d7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1648cf795408b34f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7b443358f44cc042",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "91c59a66501e0c5f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "da36c5688a6306d5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9d5229459a3927e5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "28286dadf0067ef8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f43b7b5891684e91",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "818b6e0d36c17eb8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c2e647ea972204de",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bb2912c4c5fdc863",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0611bcf739dd149d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6ef9aa96fe83db10",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9a55a4be29a9c775",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b9cd587f6791b9c5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c487075cc851a08a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d3bfbfcba63010c0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2edcd66371576f4d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "962a488c92401202",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2658a021524740b0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "53d69c0577c9a454",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "595d830bfd0dc106",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c3eb0af6232e8b5e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bc48dd61d89da686",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "642bee6d77cd9c31",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f827e4e1cf219ef2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "22d4bd0af76a9c71",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b923a3f1b4bbd5db",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a965811167b201d3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d7ab47c2d25b043f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e763e523964f159d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "17bc5d68a3aa6bb2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "eb242037d86cee4f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "41e21ab4a606fbed",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ca702fa78c3a99b4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "50e37be7f6871adc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3a8c631ea1ef5a4d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "259783b395da7324",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "74ffb88fae892886",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "38daf5627deb3a8c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f6126c79d03a3284",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3fd3f9fe45fbb9dd",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "432ff1be5a9ff445",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2c9de907389b11b0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8b9956a14ff991f2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f07bb94bd19b6da1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f39c52cf37210f03",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0f49993cb642ae04",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "db24a1356e22d5dd",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "84d6dbffcb31e39f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c5160aa0edf07933",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c57070ca4c1a6255",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "cf08242a44b1f1aa",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4329d8a63ad21c0d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4fe54b02d465f753",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f814fe14809a84e3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b6cad56407c8e6a7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b00763c26bb7e1d1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5d90f1ff6c575bff",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "30b8e881d511d946",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0c4aa2528d740dd2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "baff3de7c308e876",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3d0ffe31b1b7d2c5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7fa6bc1644d3ec36",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c3138b2fdf4812fe",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "cbf52b6585ce18f3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "db76084b8d10048f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "63662db1987c8265",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a31544a654f89796",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e71ba626205c0276",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f11a14734a828aef",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7ff425d10754f62c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c2b02d2607b4dd2e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9ac59ff829a867a0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6d2a0e6bb82ffa12",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "831c972f65c5b311",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a22711414b4562fa",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a88071575b09297f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3ce08c3bb86245ff",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2bf0ecb5f38c914d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e613905a2c699b9f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d42c7f908be341e4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4822921ee394d406",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "53724b9c96c9fef7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3f2c2317c546ed5f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6c7ced9fb91c70d8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "74012219807c95e8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c3b525d64a818326",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "53f4cdbc8d083de4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f8a88cb15a6c6ff5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6b7d67217e00d23e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a58a41d08feb8f5b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3bf99e43f4865b19",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "18c428614a98ebb5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "184c4f3aaef51d09",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c8e5888155037c90",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "831efbe667536449",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2b80d88918f55a41",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bd637b60c8febed1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c9a0e1fdaef27cc7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "02be422ece49aaa6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7f6bd84d1aa8b3a3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b23f712614f97b73",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9b50ce534c6493d0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8b637665e48af788",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e272de8597c7cf6e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "99ecbb61f47f3fa6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e947e8d0324b91c4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1b94d9cb01015a96",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "260977d426131c5a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "857889200f2304b0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "53040efbc633468e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "af3629557dd715b4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0f43828cb6834fa7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bc63ece2e3f23f4a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6d75513788d8b21c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "603fcfe9c59e3619",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "92f2f92006a342f3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ec6fbeee2d777632",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "31ef1fd125ce3e49",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "46836c9e53a1bf0b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8d6df797fd69c338",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a0e57488d0e97305",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "aacc7647334a2b92",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6cb849000b4bda72",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d05788d90b5b26c6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1975e27212091b73",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b7d415320f50c93a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e2a09b14042ebb4f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3533ae2215151dc6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a81199254a5a00da",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3a44bf7634929061",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6391b48a33bd5b3d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a77cd5dfd436f1fc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f604eb1875824fef",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "440830eb20e48ea6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0b3fb13466f912d7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e32c6beabe60a0fc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4eefdf5f801e369f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b4916888029c039f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8840e4d89a87d891",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d0af8d19404b6e11",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8481036d02e27fff",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b4982788d646c9de",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6e4cf9d17825bd18",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b97f70ba7a5a2696",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2e64f69866054887",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "09239e77c2b59ce0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "74a4586b2aaa4d61",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b779ed2ade37dd45",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7146c717306038eb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a782e0836c5558f1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a668227744722947",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d2bf15d757ba9fd6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "706c4188b1222614",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "31f62ad418bf1878",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "13b428da6cf61832",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f1f93085e6e36666",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b6e0f8aaf9e6da0f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5532ca0a84e27b62",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c4f0e44e2c06988a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "44eebdf2186d9d98",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "60708dfb5cbf5d9b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6c94531ecd0916c1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4d034cc57c5a8261",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "279cf299f7f35393",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bd204b33da903df8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8ce60e09d504a5d6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0fa55f667bb76b63",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "24deafc735b51500",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b9229a2a1bee4272",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "fcccb4edfd6f35f9",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "31534239299a9470",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5be28b9a1f66590e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8d6350d0bd09e54d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2fdd81541230e1b2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1cc358039b247e75",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a4a8549a3a656f0d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d42554884952390d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "59b9cc4b28ca9e5c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bf316dd0bdcfb51c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e823e63dff966597",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "93e3893744daabeb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5d1e2d95bb840fcf",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2240d4b75cd13c83",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "94b735bf10a17bee",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6623862389dccfe1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "59f0d96adfb93440",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "55c60ee3a00662f4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "16e8ebefc2bb9291",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4a646640c878cecf",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5611427a8a7cc46a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "04fcc415eca986e9",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0452ef90f7febcb2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "57c832034d1a2bb8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "68d703cd52d111cd",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0693977229b45f16",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1b75c75af7b7b1b5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7ca49aa4d77e1ec9",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b573acaf80977df3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "55df9e08ab68beaf",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "86b1d94335d00109",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e8960b5f53e58c06",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "82beed1bdc019ba3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4e013c55678ec709",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "dc0cfc87eb3d58cb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2c2796d5c3deeaf0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "1ca11ed09904475e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e2aea03caa87fad9",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e707e04b428a8249",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6a8a2faf10e629ad",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "edf48132412f6817",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "53cbbc33044f568c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "aa46e2310e5b483e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ceefd791635811d4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c0950ddec44bbd25",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e390080574347df9",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b536649787f0da79",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "80fe8d24b1d97afd",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b26b133e1bcab23d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a3c4e5f54c9c292d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8f506ad7ab9ea9c2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "00b313e4d90353f5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "80e35f697d08fc80",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a7a0815b10c9f48d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c7cb1de588b5808a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c5485ccab8b488e4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3c9822d1a9706a65",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "532ab08839c0ebdc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2210b983d6cd5fd4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "aa8f789d725e1c4a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "8afbb04386aa26fe",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "15409357f20d1abf",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0d43af16e672a138",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "527c04efd70ab252",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "20b20cc3208af180",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e276b193561227dc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "00d0b56a27e3acf4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2c399a94e8f71859",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "fb9f6d59c5a26c7c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "700a9a475d94bd95",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e4f940575202b3db",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4043514d4b365f1a",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f73b83c3f4b7d086",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "19447c561218c869",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "2dd6dcc97a82dfd3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "75e4704e270b8970",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "60174c1cf16addc2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "628b9f905ff00794",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "cef5085f7fe121b3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "35c502d92a5eab7f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "972f500c2fdd5bcc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c000dfb8642fbc06",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a2fa86d0f22dc9d8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a3a5e8cea8b1daf0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "290236b976d74d4c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "96521ca834f269a6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a573da1a449b9265",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "ef7def50696eeb38",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "a3ead77199dc4fa7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "994608bd11b41037",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "790b438b527c7eae",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "0e78ba7593d1ea36",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3cb696a9f785c1e3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "5cf74f8af33708e8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bdd2b62331016f66",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "77e47ab1a4eb6d59",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9c7b1f2767b8e0db",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d9ebe8de25a862e5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e324163062581ae4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bce830a00ac78be2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c59fc05dd0e2c893",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "c48d25857d96f4f6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "3b294e03b084c00b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "f8c90c6ad054c3ed",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "bed5d8408290d594",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "6ab60c929045f652",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "95a680ae9de65399",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "38ccc54c25e3fdc4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "9f9bdc96d2ef3127",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "913323278e73b5fb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d2898f15897ed2b5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "699d8e8e2141d937",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "38d07a9809eee2b2",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "cc2d640c81de4c52",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "fdfbd83157233bd8",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "7ef5aabb4f526af3",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4779a172f6a8f2d7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "4e744fe26d16a8c7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "d999f592b593cdd6",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "11701c79545d6fca",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "de12212aed806d71",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "b36dd389cb257730",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "fccadb6db7aaca4e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "error"
+  },
+  {
+   "endpoint_hash": "e0a075f2047f2719",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "00b805cbe0c41a2b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d06a4a4bcd336b16",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2c23435366660d13",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "063725023c891706",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "478767b98e6cb905",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8b22f44475a073f0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4f1481033a8341bf",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "90c6dbe2a48b8b49",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "111fd1e28d31edda",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d4cda9892ae625df",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0964a8e31b65213c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8f8d650b46edb7b4",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "523dea35a3de1c86",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "177aade423006a68",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7ef75ee31a4fd937",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1cd2ba44362a486d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3c5fdc05d15ab149",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3a3739c2c485375f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "261f348ab733be3e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4061aa0acd5c3f68",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ccf15d4de703af8b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e1826aaf85d702ed",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fbab30550c32351f",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fd92fc0d18b66b68",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "eec781f9f5477860",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "97b8dfd8b8471639",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c142bc8d0827c3dc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ceb94c096f4e7e0e",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "16e8a818e3ceb945",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "43b4036869be6a13",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a8841ce3db2f9791",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "db1a130bf6cc031b",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a248dd5e8f8ce0b5",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3dfe034472c47403",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b40d7dc5b6c307c7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e87323c9a70339b0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "56bcb9136e711546",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "98cfe10c5a7e93f7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "80c4694b8676edd7",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "787c0da5c7f225bb",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8c440a09330ed0a0",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "35115e91a237b06d",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "cbec0bf6b8a037e1",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "faf051d4b8395c84",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "d70f58cc794f2d6c",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "2d451cc29ab04ebc",
+   "marketnow_state": "PROTOCOL_MISMATCH",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "cac596ab10d6e759",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "b1787e720cc88d07",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "e36f79dd929c8eb0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "af602b700d9cd2c6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "100659f0baa150c9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "575493bae64cf3cd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "1b6ce236363d6f80",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "791fc055770c0848",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "91705af751b1c2c0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "5aac709eeaf9e2f4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dfbab681039968f1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f65a07da17107a10",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "12e6990ef178499d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4fb0833498ffc35a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a244caa4ec6ec56a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d9be198ba23b8b63",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "da3c3d536e364452",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6189bbcab1c7ceee",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b64462cfb7174e30",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "917805fd34e29f94",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b8c79449af15c95c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3f5402057a4d6865",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c0e66193006cae8a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "784c977959056db3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "206323dd54d21ac2",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6ad062f3c8a7e848",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9fc4d8825ac05510",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "29632ab19e107f56",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "417c72a0a083d3ab",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e097f19542ea173d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "59f9dc09d9b14974",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "32bd307803860ddd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7edd3fb742914f94",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2e1a6270765f0451",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fcadec645e42a429",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "531affda400c53ae",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "94cc47515420f203",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "88d0376d0abee837",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "adda08404f6802d0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a6b5a334db019adb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "db85c1fc6cd588f8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "97068a659432c20e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "57ebabcdd12bbc80",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b8f2f5ee1bc33392",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a758e5425cabffcc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2576221128eb095b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "76bef7fbd9f70cc5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c4b636c339a907c4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0dc3cb3f746c1696",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2cd4c46d12a2e194",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b202cb8e6907fd08",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "19470e4fecd3d956",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ab1eb66b0a4f732e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a80a548151208b6d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7ab5e0161f25f434",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6b1417650fc54909",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9fb115f978a25c38",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e2dd34c2df27393f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "55caa3f24941e589",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d31c49356c080358",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "97468a1c8282eca2",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3b9c211fe947d961",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "69efdf24329abe98",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d95d7f5b77cd800d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0eb4450bd76680e1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "36166d5cbabe6832",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fba72c7c103b230e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "53907d665ed826de",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0a26acf5f5e19a8f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ab0c319ca0258394",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "90f2d0ecaaae9cfd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8d22a8321470d952",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f77f263a137904b8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cb4bc29b566a72fc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "eb67561d808782d3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "85b71eea96fccd8f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ab69fac81ebf30d9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b55d0023015d5594",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9fb3aaaff8515419",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7599579cb36e8f12",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ccd5661409c057dd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ad1859966f70bf39",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "51f515881bbfe018",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8e2f9926ae113695",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "add56e3d94981de1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ca74643c94a2cbaf",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f131ade2fc37531f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "260e37aae5e2bfa0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a1a3156bf4f43d8f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1514335cbfe964f7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cb8c2cbe2bba14b1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5553b9594c55d7ac",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "accf3cb6b707e77c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ccf4f1812f50769e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "04ea32153c1b51ac",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ada80ec4d52b1a1f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "23d29144edcef5c3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0e0938b10da0abdc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cc13e65131523d1d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "37315d3036ac3744",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0cf6cd74602e6c25",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1abf1737d6df4cdd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6ab3010e8e9ec2ac",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "00fbbdc191da8716",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d9d20444a872a660",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e3adc1b37c03846b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6ab8984aecc57c45",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1be2c460c7c1165b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d87cd497be4be8ce",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3145f74903a154c3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5a4d1423349ca848",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dda91dbd2dffecd3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5df8f88bf142530f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e81242255bea81d5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4c40135ebf0fcdfa",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e5f70ad02b562b52",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f9898ec52cacb5cd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b7d26469161d5630",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6d07e7fa197f064a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1610a9c56af9a96f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "aec34e730ed613f0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ebbe0299dc86834f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "72da72eb58ca2573",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9ff6302541f793ae",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4d158f40d89ba57f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ecc8e1f46b52c80b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e856df001b498364",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "90aad99917aaa6ad",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7d5a682ae25cda24",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4a415d3667174615",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "83ff5a82f07eae1b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "59705e64eab020b2",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5f7f03313fff4578",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "52ddb76ffa03bc1a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0c3783345aa16c1e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f34dadf5066bf65a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "84ea2fbbaf585e38",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5c72ca4927031850",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7247ac0f9840d7d4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8713582588cd9b25",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dad5df5a945fa16c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9509b2b45e83ba61",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6dca769866198d40",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8d4dff4c9ac133b7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "693771c9d5cb4dc2",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c88aa53840e8ac10",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dc7693afb900d330",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "19a831ac1c03ddf3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a4be866f180ca680",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d5cc60c64d46e62e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "19b69078a9adaee7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bbd9971ecdceca31",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c17dad4ccc66d2da",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a91e5bf0391b90e7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "94155453b8820250",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "887c9287950b2e01",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d2f1ec38c2104cdb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5734c094bce0476c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e71891e43bb47705",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9c545ddf6f42458a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e6f761094281e009",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b04be53e95c01ada",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "21600b2320877eb9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8b77937413ae91f8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "28502c08b4ed73fa",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d9ecf6bd0df0a9be",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cb143475e8f62ff9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c3252fffeef56115",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dccdbe3f71dcfce4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3be39edaf48cc5bb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "836116e128675dd7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "465de1358fcf00a0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9bd5184b44040eeb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6c57328fbef4f848",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "daf52d1fba211ccc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "17ddfa2a59f5c2b6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d14c65f8b76b0a17",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "65e5013537444a3c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a9810c8a03e0ccc0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1ba2fd4458927f33",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e93b3ac2744da22d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "407f92f6717749fc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "83dec586afa7859e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fe4f2d7374c299a0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cc8cbf38964557bc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4916d48913a88749",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fd50da61b0eb327c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0e420b5c0d05a063",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d11aa1fd1b2cdf6b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "14a48e0b01bc181c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4aa1efd007b57cd8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "568664aaed621dad",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "19bcd76bf19bd8da",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "480b65534a3aa60b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9fdf38743ab4afd7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "28c53737764456e8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "47e6c1d86dae3f80",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4810b67dbed207b3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dfbc96794133d137",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "80a9e94b898f28e4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0cfd3ac2058cc490",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6a5571f138726d78",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f4f448e07f91b669",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1cd08b1328c04f7b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4dca64df84f00853",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "12d9c738abc139ec",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cc0bfc28b1b4bbae",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cbcb07a03405b451",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bae9c33d36f8b3ce",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b7dee41cc5b95681",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fa7cddcb4e4b12d5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4325b234aafa024e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0d988a81f52a6576",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bb52b1875c37568a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4f8e58143babbdb4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a25fd2c1f47ae7fc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "809806bc6b64fe0f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bbcb1b8853f228e7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "af2ea46a7111e62a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9c25c356ef434930",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "aae25b56bb78a264",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e8d9cb7cb5cb071d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "36305f2a38f0b071",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f54f9bfdeab46c79",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "11d36fd43e2283fd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3f8aa9f2d725d355",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3756bfe6cd03bd26",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "70da40d2bb807a0f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2fe2f0bba013b257",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "42e14eb377099602",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7adeeedb42b53fa7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9441c433a6b83add",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "894646d662b07798",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5872e1d828d00244",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8152969fade2a8db",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c6b657d41b20047c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f7b3cdee9f060f5b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7f2e43cd98fe7871",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a031542d8d99450b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e951a75ae2ad2729",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "59dbf407a551e4b5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "07b0a951592fd0f0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7eac64b3d1493d7b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1f5a0a903a61e836",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "739f0a26011a5b3e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "16b908ddef4f36f4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ce0d30351e5f011e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "935285607906f5a9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "aad314892445222b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "33201e5c510a1f2d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1fce694ba256f238",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b898124775eb8106",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2df42787c8735ccd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "12189f2f435fb3a6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "95923de3542392e7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "611783010d7bc9a9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ab60239467f3ba13",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "288c938980843dfe",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d92d9817f0e8373b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "89ef4109bc21a7d9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7b298339b2a0d961",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c90dee7fdb085a3d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1bdb7b75ecaf010a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "70100acf0f81ae7b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a4f76823127b8c7b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ea68e157b65dc714",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "07d809dc3c15a5b6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "13a104ec73d8c004",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "187245eb611b0c48",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e120c3bf9ae3a7e5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2d67bf41a434fc79",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "abe384cc146c82fc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "97f60c202d2ad75b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "91edec267da156ac",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3ee7021a28761d65",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7a87429e7f2ff5a3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5d6e6c56ce2b4d6d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7559842ed36c3f3d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4b2df306ba49f553",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3dbd3fd289f3717b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e05609e36dad615c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a05460fc4348ad09",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "81e92a2bcf3f8f91",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8a411823344bee72",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e9a384d8d6932641",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "15b1c056795bffa9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "59156fd0f70738ae",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "08479da53eeb876b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ab83fe1dfef7d45e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5d4854a3d5f43f67",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "75f00dc530725f5e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2c068d79c8f49a1d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1035e6084de87ec4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d926bce0491ddfa8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "43d78640057d864c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dc70a6496090c0f1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7698145e701f8fb6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ea1fa00239d00677",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c032244c4e0dfce5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "279e33a44b702745",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "95bfc0a7e0a2bf1d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bd2a384be367f2e3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fc8da32c8040b1d8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c2ec95be39036369",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "59895a86912facc1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "87fb44abd26215bf",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "aa7910b27f1c26f4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0db8ca6eb99ec809",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cf8a5c0a501be825",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ea90aa747d2c9ddd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a4a82c6a7ba7a91a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a97d97a45c3c1dda",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "13cf91774aa165a9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d43723f6e237ddcb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3ff6fe3ab77f3a22",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c6785fdc16d12952",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "749a2abfc1e6c42f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fa8d457287d3b533",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "549d71682363ec92",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "55bb35aa7bd75eac",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7cabf0933226cefa",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f966a5ed72d5ad5f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "466d7cee9edfdd29",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2a44f5ffbff027ba",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "238717e9ff30a46e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "56c1dfcd1e1d35fe",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f8c152201d2653f3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "24371692780dcbaa",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0d3b8e2919bafae3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "54934b7d73b381e1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "15b174ab91e0b440",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2b35e651bb02b1a3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bafb18bbb6de81cf",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "791576394bbcd6f6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7d758402d2ec074f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bd559c19a2d31bfb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "082b4bffc8bacfd4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "88419beadd06683d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d9f10f941a7f1971",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "541e184572f26014",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d92c52b08c262e26",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2cb2219094d7d5f0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "59eccadc304f6515",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "81bc683a019532e0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4b5724727fd9ae46",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dfd71c5291d3c9ed",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2a1a7977be9dfb3c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "adce43d14db318d6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "caae1ea969547068",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9f63e8548f0289fb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9a1b501f1daac44f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e182ca38b8a19e63",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3674ca2184ed8cfc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4a25a84f5a13b465",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "848981cd113662ef",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "566777e9b4540b39",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b5568cf68acd3e14",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "125ec0901c137d22",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e1c9a180ad5de8ea",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d59de5f2d2fb27c6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5fab37753e219899",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7a9c47c9b905b949",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dce38210731601a6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b3301a54dffb382a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "772e8f101b7d07ed",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "acf866e3dc38c5aa",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d23294b4c676999c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "24ef4a1419f77438",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ef83296cd8505974",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d59bed232094401c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3f425afdce1dea7a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "36ac387b56fa8640",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ae8bdcc3bbcddb21",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "edc1f1865169a315",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4789e5052532a039",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "30d2306726ddc43a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "791f702775f57bd0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "943bd4bcd001fa73",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "92c6f86920918240",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "14ac3f16a0e3ed95",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "773762b6851e8492",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1e80814599398b25",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c1a43b4cf3decb27",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0d69c879efda51a7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "881cd8918b5d08f9",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c43cbab6115412ea",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d2d87b5cb3386e80",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f72e24ec9c1d3e3a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "de6542540f0988b0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cfa5ceaedeb788e0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d44976ea93dc3a3b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "87ab7591dae50843",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3208ea93e7f0ed5f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3c3a18b2afbed800",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "379bc21242450a3b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1481d8f23ebb7d96",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ca52b90ce90049dc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a5ea67324183e2f7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "41c1450222b427a4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d814a0109b6f7e75",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b91369b7909b307a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9d44a5ab2f50539c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "982e95890af6d857",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5818a3471ee66047",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a68638c7972f5566",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2f660c3b5e572c58",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a09faafcead0bf90",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7aa8ce3fc0cf4f0b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9ff83e364679a9ee",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6e1cdb458d89a699",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "21d3dc6cbd1657b0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "57cebbfec22084da",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e04b2aff37336193",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e944ef844b9495aa",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "07d196ac3a6f2393",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "24aaf4cc897ef91c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0d17489fbd2efba1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a08d41d9ee6bace4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "61af667f9ea9b8ed",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dd35c90489223f80",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e621ecae1cdfc833",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d38e9e3d8e60f915",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "33cc799073cca60f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0b1bd737a51be6d8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1d0c6af6ff916782",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "725e6e3716cb7856",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a8a357b0f8b2d027",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a15614a0bc632d7a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d5b625635ea378e8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b91d0e809342f03e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6731688dd11a6120",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f60d1cdeb0f12c90",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fd8c288e56b7f340",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5b440ebeb3fab30d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "70ef51c2bdae264e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3856e76e4440dd0a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8fce0418b096eaff",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "97576bfc15e7c0b4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0ed1a079a3ac7a91",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7d26ebc51421c864",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7f22e6f720676918",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9906f62114fafb91",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "18c35074f7c88373",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d64718a2023312f3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "427ab84c0ea8fc31",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "738c944004e7e926",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "97d455c4fe4031e8",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "083e772389260a06",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "587f47632b424f0f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e290c4f2d3a1505b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3405a3d094b4da9d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3aebef9597bee6cb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "744016ae0aea8cfc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cad4cd0fe725df1d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "05738965ffd26f90",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "592f8eea7301bd0b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "059f16f1e566afdf",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7fe8dbbc3bc91da2",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "559429f2e611fa9a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a7bacb027d6e3bdd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a5cce7e962e2a053",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "26dc09c4d4d897fb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1fc4c22df4014444",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "223a26f96902df1f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "05431b14d65c41eb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "38b07a29301ea507",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "137d74a3291b28d5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d6aec69c78d1c421",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dd7bb61d782adceb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d3ae58c645146c12",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "65b25a529a56c1fe",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7ce34d444ce5feae",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1f85998baaefad7f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3d1d832f9c15cf4b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2ed3cc8713b5632f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e52dbbc0bb5a8a11",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b8d993d87d51fb4f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "3c5a50e59d5a9abd",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "506f6367a6814dd3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "78ec82114ba1d06c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "05ce23469372c22e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "57d04447d84be2c4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4abceaa264173bad",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e2446e218ff52b8f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "53bedf40d8a78ba1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b29962c571c109c5",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "98ef425fc3041fda",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b43f16099dca6d64",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6ace72e1b7522f00",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8d90a5b4cc3716d0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4be5edc7a0e13024",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c25dbfdab7822450",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fc39694cb18f19b6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "315a221529b7e170",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "41e2104f4a2e3fde",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7b2005349107bc62",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d8c75a0daa2ccc51",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e6f04f4930d7f2a0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c1623ee2816f633c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "e7921463fb49b7e1",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0d0d43fb9c2b73fc",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b032d36b558e1f31",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f43e60da2a76dc5c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "752ad593bd6182e3",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2d9a5c4771391126",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "829ccd95a1286da7",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "5c146fc37053f89d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "28f6e55fbf76296b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "afb41546f1e8297a",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "267e4a4a2898d970",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9dedf5769f9feceb",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "77fdb1edb806f2c0",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6cd42c10741c4e3b",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "09d2804ccdea260f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "09529028804701d4",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "325f6d3f8ca1ce9e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a28909dd3edb8fb6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "47151adf7f67a599",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "071bfe219ee18009",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "377f5cd8b1ba189e",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "784c267ced76f24c",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "45a721ce042a2311",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "98648a74d437a483",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "12849883dabed2a6",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2a0ee52e8a5a1187",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "47f4962ce9182747",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "002b1d0567830d1f",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "93530bfc089e724d",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "299bad5f1a4f4f95",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "dc001fc992bf9b23",
+   "marketnow_state": "RESPONDS_NOT_SERVING",
+   "fetchgate_outcome": "timeout"
+  },
+  {
+   "endpoint_hash": "679e7b249ef92928",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "8f3973adb0011aa1",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "f294a385147c5176",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "0e1c0068b5700ddc",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "dedde0c458d4b610",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "35c896829bb4d8a9",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "d92826927015a546",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "9115c70cda187b7e",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "aaef961288987364",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "c6d710e00764b158",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "4f198b5a9bdaf473",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "e5ddce745e0be976",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "6d0793e95d38543b",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "a4167f5dfaf7f22a",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "a8894ab93429bb88",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "44dbc6b2fb123484",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "021ded3bd38a9bdc",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "e3d974112ae3bde0",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "099b45a2c21bba99",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "025364dbc4fbf7c3",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9c08f28678cabfce",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8a3338e8a3c5c63b",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "397983e69ed229cf",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a14089b4e6845b59",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fd236d835c1ca4c8",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "94276ed6c8112476",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b141eefebff24cc5",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ba31e793846bcce3",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0ed216556b9d4c91",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9c8019ee054b96e6",
+   "marketnow_state": "SERVER_ERROR",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a49d7b957b9c25b0",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "e85396e9161a6db8",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "7b2de77f1f92ae3b",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "f7f29b58c271df3e",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "5bdff129a8d97866",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "793721b1687e2773",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "9e1fccb87fa008ea",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "63d80188ed547045",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "d98d62699baa615f",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "b33d50ad94688af0",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "83374f8956188f38",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "758b99a0eae5eab8",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "d0eaa5f56540b0e8",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "223ae57122e5fbcf",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "0f26c298d38301c5",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "c0a4e7f29135641e",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "4dc1299d7beec7f1",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "cb1a350b8ea00f2f",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "579a60bada516881",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "6aa09ee4bba1bfdc",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "40acae8df4cb6c3f",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "a2ecbc3cd9407631",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "8eac0c9a5021b9f0",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "8eefcf4c53c80fc4",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "ef5463469082e11c",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "64016291fecf255c",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "6889a7c9335d603e",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "auth-required"
+  },
+  {
+   "endpoint_hash": "db0bb9f506e82f27",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "2c572e47712039f6",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "7dfa6474e8adf745",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "f024b2052022393e",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "d5228dbb017f490b",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "baa6ff30241f1079",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "not-mcp"
+  },
+  {
+   "endpoint_hash": "e19f3de06caa648a",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "940f244f82a2734d",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1feb3c7a1e187463",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "37576bd164a6855f",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dc8127d811be4b06",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ff968a2d0325bf00",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "b758fb2ce949c057",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "fab655964c2f85db",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "92fa8c0efd9913e5",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0894e1c7c7235138",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "79d43ea32012a1dd",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9406060ef8b92a09",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4688cde0c327e70b",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ae2ba88cbb6956df",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2065a22d90672f65",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dc5843f24dbfa8f5",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "303620c36834fc75",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "58f2cc7981296bfe",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9998ea151b61cc52",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "da8126cdd91362fa",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f092fdf2c11eea69",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "af273b877e181f1c",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "646f26627a7cac4f",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "571c840f34bbdabe",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "780b9e0a31299611",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6262780caea973c1",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1c13bab7f64b173f",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "794283b9acd5cb13",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "969971ad557cf713",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "13ec6ac23a3ea731",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "09646f0131232d70",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "bdf93b2ae436983e",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "cfcc804ada481d73",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6f144d6b599f1942",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "57e781bfd97df5f2",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "23157d150a4b02bf",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "56df463a34d395fd",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "ce97b49391fc9db8",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "80e35b57d3fac712",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "4c8d0502db85997d",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "9d2c1181910d4977",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "dcbad7d6735957fc",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "63661c4fc57d1dab",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "913bf4d69d963a33",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d54145270b1684b4",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "44ac8b4dc16d964c",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "2c3422af6230b066",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "258823c3c11575fb",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "333e868501a5cf6d",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "8b329dce3c19f43b",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "22f8496ce302c835",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "65d389016e4b9339",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "d0e40d2275e362ae",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "7d69f094920b0214",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "eb92ea058636669c",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "a3134415139ee5f5",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "f925d5577112ea5c",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "6db90757f9bba5f4",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "c7f3c39457555d64",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "0518c9a80a372b47",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "da61d49c82ee8d66",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  },
+  {
+   "endpoint_hash": "1a1ed9762889c7a0",
+   "marketnow_state": "UNREACHABLE",
+   "fetchgate_outcome": "ok"
+  }
+ ],
+ "note": "Hash-level artifact per MarketNow's aggregate-first policy: raw URLs are never published by us. Every hash resolves to a URL via fetchgate's public CC BY file (their side publishes raw URLs), so each row is independently auditable by anyone holding both files."
+}
